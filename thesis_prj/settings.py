@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'thesis_prj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'reflection',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'NAME': 'bJuBhp9h75',
+        'USER': 'bJuBhp9h75',
+        'PASSWORD': 'YkX5Lxcf1d',
+        'HOST': 'remotemysql.com:3306',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
         }
