@@ -1,0 +1,142 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <a href="{% url 'reflections:create' %}" class="float-right"><i class="fas fa-plus"></i> Add Reflection</a>
+              <i class="fas fa-table"></i>
+              Reflections</div>
+            <div class="card-body">
+
+              <ul class="nav nav-tabs projectTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="active-tab" data-toggle="tab" href="#active" role="tab" aria-controls="active" aria-selected="true">Your Reflection</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="yours-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Provide Feedbacks to</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="archieve-tab" data-toggle="tab" href="#suggestions" role="tab" aria-controls="suggestions" aria-selected="false">Feedbacks given to</a>
+                </li>
+              </ul>
+              <br/>
+
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created By</th>
+                          <th>Created Date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for eachReflection in reflections %}
+                        <tr>
+                          <td><a href="{% url 'reflections:view' eachReflection.id %}">{{ eachReflection.title }}</a></td>
+                          <td>{{ eachReflection.created_by.username }}</td>
+                          <td>{{ eachReflection.created_at }}</td>
+                          <td>
+                            <div class="action float-right">
+                                <a href="{% url 'reflections:edit' eachReflection.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="{% url 'reflections:delete' eachReflection.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created Date</th>
+                          <!-- <th>Actions</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for eachReflection in provide_feedback %}
+                        <tr>
+                          <td><a href="{% url 'reflections:view' eachReflection.id %}">{{ eachReflection.title }}</a></td>
+                          <td>{{ eachReflection.created_at }}</td>
+                          <!-- <td>
+                            <div class="action float-right">
+                                <a href="{% url 'reflections:edit' eachReflection.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="{% url 'reflections:delete' eachReflection.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td> -->
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created Date</th>
+                          <!-- <th>Actions</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for eachReflection in provided_feedback %}
+                        <tr>
+                          <td><a href="{% url 'reflections:view' eachReflection.id %}">{{ eachReflection.title }}</a></td>
+                          <td>{{ eachReflection.created_at }}</td>
+                          <!-- <td>
+                            <div class="action float-right">
+                                <a href="{% url 'reflections:edit' eachReflection.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="{% url 'reflections:delete' eachReflection.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td> -->
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        
+      });
+    </script>
+{% endblock %}

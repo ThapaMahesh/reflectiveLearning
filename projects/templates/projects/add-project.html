@@ -1,0 +1,113 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+              Add/Edit Project</div>
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <div class="form-label-group">
+                        <input type="text" id="name" class="form-control" placeholder="Name of the Project" required="required" autofocus="autofocus">
+                        <label for="name">Project name</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-label-group">
+                        <input type="text" id="slug" class="form-control" placeholder="Keyword for the project" required="required">
+                        <label for="slug">Slug</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <div class="form-label-group">
+                        <input type="date" id="start-date" class="form-control" placeholder="Project start date" required="required">
+                        <label for="start-date">Start Date</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-label-group">
+                        <input type="date" id="end-date" class="form-control" placeholder="Project end date" required="required">
+                        <label for="end-date">End Date</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <input type="submit" class="btn btn-primary" value="Save">
+                  </div>
+                </div>
+              </form>
+              
+              <hr>
+              <h3>Project Members</h3>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-md-6">
+                    <div class="form-label-group">
+                      <input type="email" id="member" class="form-control" placeholder="User's email address" required="required">
+                      <label for="member">Email address</label>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Add Member</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="table-responsive">
+                    <table class="table dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Mahesh</td>
+                          <td>mahesh.gru03@gmail.com</td>
+                          <td>
+                            <div class="action">
+                                <a href="" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        $('.toggle-questions').click(function(e){
+          e.stopPropagation();
+          var thisbtn = $(this);
+          var questionBoxId = thisbtn.data('target');
+
+          $(questionBoxId).slideToggle("slow");
+        });
+      });
+    </script>
+{% endblock %}

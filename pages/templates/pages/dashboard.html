@@ -1,0 +1,149 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+
+          <!-- Breadcrumbs-->
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="#">Dashboard</a>
+            </li>
+            <!-- <li class="breadcrumb-item active">Overview</li> -->
+          </ol>
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <a href="" class="float-right"><i class="fas fa-plus"></i> Add Project</a>
+              <i class="fas fa-table"></i>
+              Projects</div>
+            <div class="card-body">
+              <ul class="nav nav-tabs projectTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="active-tab" data-toggle="tab" href="#active" role="tab" aria-controls="active" aria-selected="true">Active</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="yours-tab" data-toggle="tab" href="#yours" role="tab" aria-controls="yours" aria-selected="false">Yours</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="archieve-tab" data-toggle="tab" href="#archieve" role="tab" aria-controls="archieve" aria-selected="false">Archieve</a>
+                </li>
+              </ul>
+              <br/>
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created By</th>
+                          <th>No. of Members</th>
+                          <th>Start Date</th>
+                          <th>End date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Active Project</td>
+                          <td>Mahesh</td>
+                          <td>4</td>
+                          <td>2019-01-04</td>
+                          <td>2019-07-09</td>
+                          <td>
+                            <div class="action float-right">
+                                <a href="" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane" id="yours" role="tabpanel" aria-labelledby="yours-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created By</th>
+                          <th>No. of Members</th>
+                          <th>Start Date</th>
+                          <th>End date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Your Project</td>
+                          <td>Mahesh</td>
+                          <td>4</td>
+                          <td>2019-01-04</td>
+                          <td>2019-07-09</td>
+                          <td>
+                            <div class="action float-right">
+                                <a href="" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane" id="archieve" role="tabpanel" aria-labelledby="archieve-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created By</th>
+                          <th>No. of Members</th>
+                          <th>Start Date</th>
+                          <th>End date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Archieve Project</td>
+                          <td>Mahesh</td>
+                          <td>4</td>
+                          <td>2019-01-04</td>
+                          <td>2019-07-09</td>
+                          <td>
+                            <div class="action float-right">
+                                <a href="" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        
+      });
+    </script>
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+<style type="text/css">
+  canvas{
+
+  /*width:1000px !important;*/
+  height:300px !important;
+
+}
+</style>
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Reflection Details</li>
+{% endblock%}
+
+{% block content %}
+
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+              {{ reflection.title }}</div>
+              <div class="card-body">
+                <div class="row">
+                  {% if user.id == reflection.created_by_id %}
+                  <div class="col-lg-12">
+                    <div class="card mb-3">
+                      <div class="card-header">
+                        <i class="fas fa-chart-bar"></i>
+                        Word Frequency</div>
+                      <div class="card-body">
+                        <canvas id="myBarChart" width="100%" height="50"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="row">
+                  <div class="card {% if user.id == reflection.created_by_id %} col-md-9 {% else %} col-md-12 {% endif %}">
+                    <!-- <div class="card"> -->
+                      <!-- <div class="card-header" id="headingOne"> -->
+                        <h5 class="mb-0">
+                          <button class="btn btn-link">
+                            Situation
+                          </button>
+                        </h5>
+                      <!-- </div> -->
+
+                      <div id="situation">
+                        <div class="card-body">
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-md-12">
+                                <p class="text-content">{{ details.situation }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- </div> -->
+                    <!-- <div class="card"> -->
+                      <!-- <div class="card-header" id="headingTwo"> -->
+                        <h5 class="mb-0">
+                          <button class="btn btn-link">
+                            Experience
+                          </button>
+                        </h5>
+                      <!-- </div> -->
+                      <div id="experience">
+                        <div class="card-body">
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-md-12">
+                                <p class="text-content">{{ details.experience }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- </div> -->
+                    <!-- <div class="card"> -->
+                      <!-- <div class="card-header" id="headingThree"> -->
+                        <h5 class="mb-0">
+                          <button class="btn btn-link">
+                            Reasoning and Analysis
+                          </button>
+                        </h5>
+                      <!-- </div> -->
+                      <div id="reasoning">
+                        <div class="card-body">
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-md-12">
+                                <p class="text-content">{{ details.experience_helpful }}<br>{{ details.factors }}<br>{{ details.emotions }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- </div> -->
+                    <!-- <div class="card"> -->
+                      <!-- <div class="card-header" id="headingFour"> -->
+                        <h5 class="mb-0">
+                          <button class="btn btn-link">
+                            Learning and Conclusion
+                          </button>
+                        </h5>
+                      <!-- </div> -->
+                      <div id="learning">
+                        <div class="card-body">
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-md-12">
+                                <p class="text-content">{{ details.solutions }}<br>{{ details.learnings }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- </div> -->
+                  </div>
+                  {% if user.id == reflection.created_by_id %}
+                  <div class="col-md-3">
+                    <div class="card">
+                      <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link">
+                            Reflection Feedbacks
+                          </button>
+                        </h5>
+                      </div>
+
+                      <div id="stats">
+                        <div class="card-body">
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-md-12">
+                                <div class="table-responsive">
+                                  <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                                    <!-- <thead>
+                                      <tr>
+                                        <th>Name</th>
+                                        <th>Created By</th>
+                                        <th>No. of Members</th>
+                                        <th>Start Date</th>
+                                        <th>End date</th>
+                                        <th>Actions</th>
+                                      </tr>
+                                    </thead> -->
+                                    <tbody>
+                                      <tr>
+                                        <td>Automated Readability Index</td>
+                                        <td>{{ details.readability.ARI | floatformat:2 }} ({{ details.readability.gradeAri }} Grade)</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Coleman-Liau Index</td>
+                                        <td>{{ details.readability.CLI | floatformat:2 }} ({{ details.readability.gradeCli }} Grade)</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Words Count</td>
+                                        <td>{{ details.readability.stats.noOfWords }}</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Unique Words</td>
+                                        <td>{{ details.readability.stats.noOfUniqueWords }}</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Lexical Diversity</td>
+                                        <td>{{ details.readability.stats.lexicalDiversity | floatformat:2 }}% (unique words)</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-primary mb-3">
+              <div class="card-header">
+                <i class="fas fa-table"></i>
+                Feedbacks
+              </div>
+              <div class="card-body">
+                {% if user.id != reflection.created_by_id %}
+                <form method="post" action="{% url 'reflections:view' reflection.id %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <div class="form-row">
+                      <div class="col-md-12">
+                        <label>Title</label>
+                        <div class="form-label-group">
+                          {{ discussionForm.feedback }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="form-row">
+                      <div class="col-md-3">
+                        <input type="submit" class="btn btn-primary" value="Save">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                {% endif %}
+                  {% for feedback in reflection.reflection_discussions.all %}
+                  <hr>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <span>{{ feedback.created_at }}</span>
+                      <p>
+                        {% if user.id == feedback.user_id %}
+                          {{ user.username }}
+                        {% else %}
+                          Anonymous
+                        {% endif %}
+                      </p>
+                    </div>
+                    <div class="col-md-9">
+                      {{ feedback.feedback }}
+                    </div>
+                  </div>
+                  {% endfor %}
+
+              </div>
+            </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+var wordList = {{ details.wordFrequency|safe }};
+</script>
+<script type="text/javascript" src="{% static 'reflections/js/reflection-details.js' %}"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+        $('.toggle-questions').click(function(e){
+          e.stopPropagation();
+          var thisbtn = $(this);
+          var questionBoxId = thisbtn.data('target');
+
+          $(questionBoxId).slideToggle("slow");
+        });
+      });
+    </script>
+{% endblock %}

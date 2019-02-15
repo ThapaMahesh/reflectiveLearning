@@ -1,0 +1,189 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+              Add/Edit Reflection</div>
+            <div class="card-body">
+              <form action="{% url 'reflections:post' %}" method="post">
+                {% csrf_token %}
+                <div id="accordion">
+                  <div class="card">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0">
+                        <a class="btn btn-link toggle-questions" data-target="#situation">
+                          Situation
+                        </a>
+                      </h5>
+                    </div>
+
+                    <div id="situation" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Simply explain the situation or experience without drawing conclusions</label>
+                              <div class="form-label-group">
+                                <textarea id="situation" name="situation" class="form-control" placeholder=""></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingTwo">
+                      <h5 class="mb-0">
+                        <a class="btn btn-link toggle-questions collapsed" data-target="#experience">
+                          Experience
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="experience" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Can you think of similar experience?</label>
+                              <div class="form-label-group">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="has_experience" id="yes" value="1">
+                                  <label class="form-check-label" for="yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="has_experience" id="no" value="0">
+                                  <label class="form-check-label" for="no">No</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Explain previous similar situation. Relate the conditions and assess your knowledge on the current situation.</label>
+                              <div class="form-label-group">
+                                <textarea id="experience" name="experience" class="form-control" placeholder=""></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingThree">
+                      <h5 class="mb-0">
+                        <a class="btn btn-link toggle-questions collapsed" data-target="#reasoning">
+                          Reasoning and Analysis
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="reasoning" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Explain how your previous experience on the situation helped.</label>
+                              <div class="form-label-group">
+                                <textarea id="experience_helpful" name="experience_helpful" class="form-control" placeholder="" ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>What factors do you think influenced the situation? How? Why do you think those are the factors? Analyse from different perspectives.</label>
+                              <div class="form-label-group">
+                                <textarea id="factors" name="factors" class="form-control" placeholder="" ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>How did you feel during the situation? How the factors influenced your emotion and action? How did you think other people in the group felt and why do you think that?</label>
+                              <div class="form-label-group">
+                                <textarea id="emotions" name="emotions" class="form-control" placeholder="" ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingFour">
+                      <h5 class="mb-0">
+                        <a class="btn btn-link toggle-questions collapsed" data-target="#learning">
+                          Learning and Conclusion
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="learning" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Analyse alternate solutions and their consequences. Considering the factors, how will you act to similar situations in future? </label>
+                              <div class="form-label-group">
+                                <textarea id="solutions" name="solutions" class="form-control" placeholder="" ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>What were the learnings from the experience? How has this experience changed your initial/previous beliefs and knowledge? How do you feel after reflecting on the situation?</label>
+                              <div class="form-label-group">
+                                <textarea id="learnings" name="learnings" class="form-control" placeholder="" ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div><br>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-3">
+                      <input type="submit" class="btn btn-primary" value="Save">
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        $('.toggle-questions').click(function(e){
+          e.stopPropagation();
+          var thisbtn = $(this);
+          var questionBoxId = thisbtn.data('target');
+
+          $(questionBoxId).slideToggle("slow");
+        });
+      });
+    </script>
+{% endblock %}
