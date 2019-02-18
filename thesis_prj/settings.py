@@ -84,7 +84,7 @@ DATABASES = {
         'USER': 'bJuBhp9h75',
         'PASSWORD': 'YkX5Lxcf1d',
         'HOST': 'remotemysql.com',
-        'PORT': '3306'
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
         }
