@@ -1,1 +1,1 @@
-web: gunicorn reflectiveLearning.wsgi
+web: gunicorn thesis_prj.wsgi

@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import ModelForm
 from .models import Prompts, Reflection, Discussion
-from django_select2.forms import Select2TagWidget
 
 
 CHOICES = (('1', 'Yes',), ('0', 'No',))
