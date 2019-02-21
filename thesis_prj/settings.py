@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'thesis_prj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '`reflection`',
-        'USER': 'reflect_user',
-        'PASSWORD': 'reflect1on',
-        'HOST': 'www.db4free.net',
+        'NAME': 'heroku_e53413dd171eebd',
+        'USER': 'bf276f67becee6',
+        'PASSWORD': '9d226104',
+        'HOST': 'eu-cdbr-west-02.cleardb.net',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
