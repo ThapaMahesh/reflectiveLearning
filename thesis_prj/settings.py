@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'thesis_prj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bJuBhp9h75',
-        'USER': 'bJuBhp9h75',
-        'PASSWORD': 'YkX5Lxcf1d',
-        'HOST': 'remotemysql.com',
+        'NAME': '`heroku_4437792b43980b8`',
+        'USER': 'ba64ac0af5cbf0',
+        'PASSWORD': '9969856e',
+        'HOST': 'eu-cdbr-west-02.cleardb.net',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
