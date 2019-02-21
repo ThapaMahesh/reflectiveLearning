@@ -200,5 +200,5 @@ def deleteFeedback(request, reflection_id, feedback_id):
 
     feedback.delete()
     
-    messages.error(request, 'Feedback deleted successfully!')
+    messages.success(request, 'Feedback deleted successfully!')
     return HttpResponseRedirect(reverse('reflections:view', args=[reflection_id]))

@@ -77,19 +77,19 @@ WSGI_APPLICATION = 'thesis_prj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '`heroku_ac4e5b58636442d`',
-        'USER': 'b0cf25c3ea2e79',
-        'PASSWORD': '023056b2',
-        'HOST': 'eu-cdbr-west-02.cleardb.net',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
-        }
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': '`heroku_ac4e5b58636442d`',
+#         'USER': 'b0cf25c3ea2e79',
+#         'PASSWORD': '023056b2',
+#         'HOST': 'eu-cdbr-west-02.cleardb.net',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
+#         }
+#     }
+# }
 
 
 # Password validation
