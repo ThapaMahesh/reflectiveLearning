@@ -56,6 +56,8 @@
                           <td>{{ eachReflection.created_at }}</td>
                           <td>
                             <div class="action float-right">
+                                <a href="{% url 'reflections:download' eachReflection.id %}" class="text-primary" data-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+
                                 <a href="{% url 'reflections:edit' eachReflection.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
 
                                 <a href="{% url 'reflections:delete' eachReflection.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>

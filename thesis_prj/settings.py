@@ -137,7 +137,7 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'myreflections'
 LOGOUT_REDIRECT_URL = 'login'
 
 django_heroku.settings(locals())

@@ -10,4 +10,6 @@ urlpatterns = [
     path('details/<int:reflection_id>', views.viewReflection, name='view'),
     path('<int:reflection_id>/edit', views.editReflection, name='edit'),
     path('<int:reflection_id>/remove', views.deleteReflection, name='delete'),
+    path('<int:reflection_id>/download', views.downloadReflection, name='download'),
+    path('<int:reflection_id>/feedback-remove/<int:feedback_id>', views.deleteFeedback, name='delete-feedback'),
 ]

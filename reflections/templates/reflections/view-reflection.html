@@ -31,6 +31,10 @@
           <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
+              {% if reflection.created_by_id == user.id %}
+              <a href="{% url 'reflections:download' reflection.id %}" class="float-right text-primary" data-toggle="tooltip" title="Download"><i class="fas fa-download"></i> Download</a>
+              {% endif %}
+
               <i class="fas fa-table"></i>
               {{ reflection.title }}</div>
               <div class="card-body">
@@ -84,7 +88,7 @@
                           <div class="form-group">
                             <div class="form-row">
                               <div class="col-md-12">
-                                <p class="text-content">{{ details.experience }}</p>
+                                <p class="text-content">{% if details.has_experience %}{{ details.experience }}{% else %}Didn't have previous relavant experience{% endif %}</p>
                               </div>
                             </div>
                           </div>
@@ -104,7 +108,7 @@
                           <div class="form-group">
                             <div class="form-row">
                               <div class="col-md-12">
-                                <p class="text-content">{{ details.experience_helpful }}<br>{{ details.factors }}<br>{{ details.emotions }}</p>
+                                <p class="text-content">{% if details.has_experience %}{{ details.experience_helpful }}{% endif %}<br>{{ details.factors }}<br>{{ details.emotions }}</p>
                               </div>
                             </div>
                           </div>
@@ -162,7 +166,14 @@
                                     </thead> -->
                                     <tbody>
                                       <tr>
-                                        <td>Automated Readability Index</td>
+                                        <td>
+                                        Automated Readability Index
+                                        {% if details.readability.ARI < 9 %}
+                                        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="You have lower readability index. It is easier to read but not at the standard of your level of study. Choose your words carefully and you may also have many shorter sentences.">
+                                        {% elif details.readability.ARI >= 14 %}
+                                        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="You have higher readability index meaning it is quite difficult to read. Choose your words carefully and check to see if you have sentences with more than 15 words.">
+                                        {% endif %}
+                                        </td>
                                         <td>{{ details.readability.ARI | floatformat:2 }} ({{ details.readability.gradeAri }} Grade)</td>
                                       </tr>
                                       <tr>
@@ -203,12 +214,73 @@
               </div>
               <div class="card-body">
                 {% if user.id != reflection.created_by_id %}
+                <div class="card mb-3">
+                  <div class="card-header">
+                  <i class="fas fa-table"></i>
+                  Provide Feedbacks
+                </div>
+                <div class="card-body">
+                  {% if discussionForm.errors %}
+                  <div class="alert alert-danger">
+                      <ul>
+                      {% for field in discussionForm  %}
+                      <li>{{ field.errors|striptags }}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  {% endif %}
                 <form method="post" action="{% url 'reflections:view' reflection.id %}">
                   {% csrf_token %}
                   <div class="form-group">
                     <div class="form-row">
                       <div class="col-md-12">
-                        <label>Title</label>
+                        <label><h3>Reflection</h3></label>
+                        <div class="form-label-group">
+                          {% for choice in discussionForm.reflection_feedback %}
+                                <div class="form-check">
+                    <label>{{ choice.tag }}
+                    {{ choice.choice_label }}</label>
+                                </div>
+                {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-row">
+                      <div class="col-md-12">
+                        <label><h3>Experience</h3></label>
+                        <div class="form-label-group">
+                          {% for choice in discussionForm.experience_feedback %}
+                                <div class="form-check">
+                    <label>{{ choice.tag }}
+                    {{ choice.choice_label }}</label>
+                                </div>
+                {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-row">
+                      <div class="col-md-12">
+                        <label><h3>Learning</h3></label>
+                        <div class="form-label-group">
+                          {% for choice in discussionForm.learning_feedback %}
+                                <div class="form-check">
+                    <label>{{ choice.tag }}
+                    {{ choice.choice_label }}</label>
+                                </div>
+                {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="form-row">
+                      <div class="col-md-12">
+                        <label><h3>Your Feedback</h3></label>
                         <div class="form-label-group">
                           {{ discussionForm.feedback }}
                         </div>
@@ -224,6 +296,8 @@
                     </div>
                   </div>
                 </form>
+              </div>
+              </div>
                 {% endif %}
                   {% for feedback in reflection.reflection_discussions.all %}
                   <hr>
@@ -238,9 +312,18 @@
                         {% endif %}
                       </p>
                     </div>
-                    <div class="col-md-9">
-                      {{ feedback.feedback }}
+                    <div class="col-md-8">
+                      <h4>Reflection:</h4>{{ REFLECTION_CHOICES|get_item:feedback.reflection_feedback }}<br>
+                      <h4>Experience:</h4>{{ EXPERIENCE_CHOICES|get_item:feedback.experience_feedback }}<br>
+                      <h4>Learning:</h4>{{ LEARNING_CHOICES|get_item:feedback.learning_feedback }}<br>
+                      <h4>Feedback:</h4>
+                      {{feedback.feedback}}
                     </div>
+                    {% if feedback.created_by_id == user.id %}
+                    <div class="col-md-1">
+                      <a href="{% url 'reflections:delete-feedback' reflection.id feedback.id %}" class="text-primary" data-toggle="tooltip" title="Remove"><i class="far fa-times-circle"></i></a>
+                    </div>
+                    {% endif %}
                   </div>
                   {% endfor %}
 
@@ -255,6 +338,7 @@ var wordList = {{ details.wordFrequency|safe }};
 <script type="text/javascript" src="{% static 'reflections/js/reflection-details.js' %}"></script>
 <script type="text/javascript">
       $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
         $('.toggle-questions').click(function(e){
           e.stopPropagation();
           var thisbtn = $(this);

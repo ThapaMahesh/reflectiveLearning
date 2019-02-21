@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block css %}
+<link href="{% static 'css/tagsinput.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -64,7 +65,7 @@
                       </div>
                     </div>
                     <div class="col-md-6">
-                      <label>Keywords</label>
+                      <label>Keywords <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Add keyword tags"></i></label>
                       <div class="form-label-group">
                         {{ reflectionForm.tags }}
                       </div>
@@ -233,8 +234,19 @@
 {% endblock %}
 
 {% block js %}
+<script src="{% static 'js/tagsinput.js' %}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
       $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        if($('.experience_check:checked').val() == 1){
+            $('#id_experience').prop('required', true).closest('.form-row').show();
+            $('#id_experience_helpful').prop('required', true).closest('.form-row').show();
+          }else{
+            $('#id_experience').prop('required', false).closest('.form-row').hide();
+            $('#id_experience_helpful').prop('required', false).closest('.form-row').hide();
+          }
+
         $('.toggle-questions').click(function(e){
           e.stopPropagation();
           var thisbtn = $(this);
@@ -245,11 +257,11 @@
 
         $('.experience_check').click(function(e){
           if($('.experience_check:checked').val() == 1){
-            $('#id_experience').prop('required', true).val('').closest('.form-row').show();
-            $('#id_experience_helpful').prop('required', true).val('').closest('.form-row').show();
+            $('#id_experience').prop('required', true).closest('.form-row').show();
+            $('#id_experience_helpful').prop('required', true).closest('.form-row').show();
           }else{
-            $('#id_experience').prop('required', false).text('n/a').closest('.form-row').hide();
-            $('#id_experience_helpful').prop('required', false).text('n/a').closest('.form-row').hide();
+            $('#id_experience').prop('required', false).closest('.form-row').hide();
+            $('#id_experience_helpful').prop('required', false).closest('.form-row').hide();
           }
         });
 

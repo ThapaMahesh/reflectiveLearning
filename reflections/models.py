@@ -25,6 +25,9 @@ class Reflection(models.Model):
 class Discussion(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_discussions")
     reflection = models.ForeignKey(Reflection, on_delete=models.CASCADE, related_name="reflection_discussions")
+    reflection_feedback = models.CharField(max_length=255, default='')
+    experience_feedback = models.CharField(max_length=255, default='')
+    learning_feedback = models.CharField(max_length=255, default='')
     feedback = models.TextField()
     created_at = models.DateTimeField(default=datetime.now)
 
@@ -33,8 +36,8 @@ class Prompts(models.Model):
 	reflection = models.ForeignKey(Reflection, on_delete=models.CASCADE, related_name="reflection_prompts")
 	situation = models.TextField()
 	has_experience = models.BooleanField(choices=EXP_CHOICES)
-	experience = models.TextField()
-	experience_helpful = models.TextField()
+	experience = models.TextField(blank=True)
+	experience_helpful = models.TextField(blank=True)
 	factors = models.TextField()
 	emotions = models.TextField()
 	solutions = models.TextField()
