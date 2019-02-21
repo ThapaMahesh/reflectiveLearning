@@ -1,7 +1,7 @@
 Django==2.1.5
 django-appconf==1.0.2
 mysqlclient==1.4.1
-nltk==3.0.5
+nltk==3.4
 numpy==1.16.1
 pytz==2018.9
 singledispatch==3.4.0.3
