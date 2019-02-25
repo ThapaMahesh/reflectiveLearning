@@ -15,6 +15,8 @@
         <a href="{% url 'myreflections' %}">Go to dashboard</a>
         {% else %}
         <a href="{% url 'login' %}">Login</a>
+        <br>
+        New to the application? <a href="{% url 'signup' %}">Create New Account</a>
         {% endif %}
       </div>
     </div>
