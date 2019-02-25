@@ -46,7 +46,7 @@ def postReflection(request):
             allText = ""
             for key, value in request.POST.items():
                 if key != 'has_experience' and key != 'csrfmiddlewaretoken' and key != 'current' and key != 'is_group' and key != 'title' and key != 'tags':
-                    if request.POST['has_experience'] == 0 and (key == 'experience' or key == 'experience_helpful'):
+                    if request.POST['has_experience'] == "0" and (key == 'experience' or key == 'experience_helpful'):
                         # add nothing
                         value = ''
                     allText = allText + ' ' + value
@@ -148,7 +148,7 @@ def editReflection(request, reflection_id):
             allText = ""
             for key, value in request.POST.items():
                 if key != 'has_experience' and key != 'csrfmiddlewaretoken' and key != 'current' and key != 'is_group' and key != 'title' and key != 'tags':
-                    if request.POST['has_experience'] == 0 and (key == 'experience' or key == 'experience_helpful'):
+                    if request.POST['has_experience'] == "0" and (key == 'experience' or key == 'experience_helpful'):
                         # add nothing
                         value = ''
                     allText = allText + ' ' + value
