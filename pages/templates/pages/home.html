@@ -1,0 +1,31 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div style="text-align: center; margin-top: 200px;">
+        <h3>Welcome to Reflective Writing Tool</h3>
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">Go to dashboard</a>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        
+      });
+    </script>
+{% endblock %}

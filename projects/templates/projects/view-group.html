@@ -1,0 +1,202 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <!-- DataTables Example -->
+          <div class="row">
+            <div class="col-md-9">
+              <div class="card mb-3">
+                <div class="card-header">
+                  <i class="fas fa-table"></i>
+                  {{ group.name }}</div>
+                <div class="card-body">
+                  <ul class="nav nav-tabs projectTab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="group-tab" data-toggle="tab" href="#group" role="tab" aria-controls="group" aria-selected="true">Group Reflection</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="individual-tab" data-toggle="tab" href="#individual" role="tab" aria-controls="individual" aria-selected="false">Self Reflection</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="yours-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Group Members Reflection</a>
+                    </li>
+                  </ul>
+                  <br/>
+                  <div class="tab-content">
+                    <div class="tab-pane fade show active" id="group" role="tabpanel" aria-labelledby="group-tab">
+                      <a href="{% url 'reflections:create' group.id %}?type=group">Add Group Reflection</a>
+                      <div class="table-responsive">
+                        <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Created By</th>
+                              <th>Created Date</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for eachReflection in group_reflections %}
+                            <tr>
+                              <td><a href="{% url 'reflections:view' eachReflection.id group.id %}">{{ eachReflection.title }}</a></td>
+                              <td>{{ eachReflection.created_by.username }}</td>
+                              <td>{{ eachReflection.created_at }}</td>
+                              <td>
+                                <div class="action float-right">
+                                    <a href="{% url 'reflections:edit' eachReflection.id group.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                    {% if user.id == eachReflection.created_by_id %}
+                                    <a href="{% url 'reflections:delete' eachReflection.id group.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                                    {% endif %}
+                                </div>
+                              </td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="individual" role="tabpanel" aria-labelledby="individual-tab">
+                      <a href="{% url 'reflections:create' group.id %}?type=individual">Add Your Reflection</a>
+                      <div class="table-responsive">
+                        <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Created By</th>
+                              <th>Created Date</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for eachReflection in your_reflections %}
+                            <tr>
+                              <td><a href="{% url 'reflections:view' eachReflection.id group.id %}">{{ eachReflection.title }}</a></td>
+                              <td>{{ eachReflection.created_by.username }}</td>
+                              <td>{{ eachReflection.created_at }}</td>
+                              <td>
+                                <div class="action float-right">
+                                    <a href="{% url 'reflections:edit' eachReflection.id group.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                    <a href="{% url 'reflections:delete' eachReflection.id group.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                                </div>
+                              </td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+                      <div class="table-responsive">
+                        <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Created Date</th>
+                              <th>Provided Feedback</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for eachReflection in provide_feedback %}
+                            <tr>
+                              <td><a href="{% url 'reflections:view' eachReflection.id group.id %}">{{ eachReflection.title }}</a></td>
+                              <td>{{ eachReflection.created_at }}</td>
+                              <td>
+                                {% if eachReflection|check_for_feedback:user  %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                              </td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card mb-3">
+                <div class="card-header">
+                  <i class="fas fa-table"></i>
+                  Members</div>
+                <div class="card-body">
+                  {% if group.project.created_by_id == user.id %}
+                  <form method="post" action="{% url 'projects:add-group-member' group.project_id group.id  %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <div class="form-row">
+                        <div class="col-md-12">
+                          <label>Find member</label>
+                          <div class="form-label-group">
+                            <select class="form-control" name="members[]" id="find_member" multiple="multiple">
+                              {% for eachMember in group.project.project_members.all %}
+                              <option value="{{ eachMember.user.id }}">{{ eachMember.user.first_name }} {{ eachMember.user.last_name }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="form-row">
+                        <div class="col-md-2">
+                          <div class="form-label-group">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                          </div>
+                        </div>
+                      </div>  
+                    </div>
+                  </form>
+                  {% endif %}
+                  <ul class="list-group list-group-flush">
+                    {% for eachMember in members %}
+                    <li class="list-group-item">
+                      {% if group.project.created_by_id == user.id and eachMember.user.id != user.id %}
+                      <div class="action float-right">
+                          <a href="{% url 'projects:delete-group-member' group.project_id group.id eachMember.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                      </div>
+                      {% endif %}
+                      {{ eachMember.user.first_name }}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        $("#find_member").select2({
+            width: '100%'
+          });
+
+      });
+    </script>
+{% endblock %}

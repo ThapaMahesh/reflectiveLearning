@@ -1,0 +1,12 @@
+Django==2.1.5
+django-appconf==1.0.2
+django-multiselectfield==0.1.8
+django-safedelete==0.5.1
+django-select2==6.3.1
+mysqlclient==1.4.1
+nltk==3.4
+numpy==1.16.1
+pytz==2018.9
+singledispatch==3.4.0.3
+six==1.12.0
+django-heroku==0.3.1

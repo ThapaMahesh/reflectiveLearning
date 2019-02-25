@@ -1,0 +1,92 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+  
+          {% if projectForm.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                {% for field in projectForm %}
+                <li>{{ field.errors|striptags }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+              Add/Edit Project</div>
+            <div class="card-body">
+              <form action="{% url 'projects:create' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-12">
+                      <label>Project name</label>
+                      <div class="form-label-group">
+                        {{ projectForm.name }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-12">
+                      <label>Description</label>
+                      <div class="form-label-group">
+                        {{ projectForm.description }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <label>Start Date</label>
+                      <div class="form-label-group">
+                        {{ projectForm.start_date }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label>End Date</label>
+                      <div class="form-label-group">
+                        {{ projectForm.end_date }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <input type="submit" class="btn btn-primary" value="Save">
+                  </div>
+                </div>
+              </form>
+              
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        
+      });
+    </script>
+{% endblock %}

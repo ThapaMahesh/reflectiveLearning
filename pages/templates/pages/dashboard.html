@@ -1,0 +1,74 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <a href="{% url 'projects:create' %}" class="float-right"><i class="fas fa-plus"></i> Add Project</a>
+              <i class="fas fa-table"></i>
+              Projects</div>
+            <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created By</th>
+                          <th>No. of Members</th>
+                          <th>Start Date</th>
+                          <th>End date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for eachProject in projects %}
+                        <tr>
+                          <td><a href="{% url 'projects:view' eachProject.id %}">{{ eachProject.name }}</a></td>
+                          <td>{{ eachProject.created_by.first_name }}</td>
+                          <td>{{ eachProject.project_members.count }}</td>
+                          <td>{{ eachProject.start_date }}</td>
+                          <td>{{ eachProject.end_date }}</td>
+                          <td>
+                            {% if eachProject.created_by_id == user.id %}
+                            <div class="action float-right">
+                                <a href="{% url 'projects:edit' eachProject.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="{% url 'projects:delete' eachProject.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+
+              
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        
+      });
+    </script>
+{% endblock %}

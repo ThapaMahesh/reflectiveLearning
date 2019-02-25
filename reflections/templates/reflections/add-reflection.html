@@ -1,0 +1,270 @@
+{% extends 'default.html' %}
+
+{% load static %}
+
+{% block css %}
+<link href="{% static 'css/tagsinput.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Add Reflection</li>
+{% endblock%}
+
+{% block content %}
+
+          {% if reflectionForm.errors %}
+            <div class="alert alert-danger">
+              <ul>
+              {% for field in reflectionForm %}
+              <li>{{ field.errors|striptags }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          	{% if promptsForm.errors %}
+          	<div class="alert alert-danger">
+      			  	<ul>
+      					{% for field in promptsForm %}
+      					<li>{{ field.errors|striptags }}</li>
+      					{% endfor %}
+      				</ul>
+      			</div>
+      			{% endif %}
+
+			    {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+              {{ type.title }} Reflection</div>
+            <div class="card-body">
+              {% if type == "edit" %}
+              <form action="{% url 'reflections:edit' reflectionForm.instance.id group.id %}?type={{ reflection_type }}" method="post">
+              {% else %}
+              <form action="{% url 'reflections:create' group.id %}?type={{ reflection_type }}" method="post">
+              {% endif %}
+                {% csrf_token %}
+                {{ promptsForm.current }}
+                {{ reflectionForm.is_group }}
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <label>Title</label>
+                      <div class="form-label-group">
+                        {{ reflectionForm.title }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Keywords <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Add keyword tags"></i></label>
+                      <div class="form-label-group">
+                        {{ reflectionForm.tags }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div id="accordion">
+                  <div class="card">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0 font-weight-bold">
+                        <a class="btn btn-link toggle-questions" data-target="#situation">
+                          Situation
+                        </a>
+                      </h5>
+                    </div>
+
+
+                    <div id="situation" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Simply explain the situation or experience without drawing conclusions</label>
+                              <div class="form-label-group">
+                                {{ promptsForm.situation }}
+                                <!-- <textarea id="situation" name="situation" class="form-control" placeholder=""></textarea> -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingTwo">
+                      <h5 class="mb-0 font-weight-bold">
+                        <a class="btn btn-link toggle-questions collapsed" data-target="#experience">
+                          Experience
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="experience" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Can you think of similar experience?</label>
+                              <div class="form-label-group">
+                                {% for choice in promptsForm.has_experience %}
+                                <div class="form-check form-check-inline">
+  									<label>{{ choice.tag }}
+  									{{ choice.choice_label }}</label>
+                                </div>
+								{% endfor %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Explain previous similar situation. Relate the conditions and assess your knowledge on the current situation.</label>
+                              <div class="form-label-group">
+                              	{{ promptsForm.experience }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingThree">
+                      <h5 class="mb-0 font-weight-bold">
+                        <a class="btn btn-link toggle-questions collapsed" data-target="#reasoning">
+                          Reasoning and Analysis
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="reasoning" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Explain how your previous experience on the situation helped.</label>
+                              <div class="form-label-group">
+                              	{{ promptsForm.experience_helpful }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>What factors do you think influenced the situation? How? Why do you think those are the factors? Analyse from different perspectives.</label>
+                              <div class="form-label-group">
+                              	{{ promptsForm.factors }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>How did you feel during the situation? How the factors influenced your emotion and action? How did you think other people in the group felt and why do you think that?</label>
+                              <div class="form-label-group">
+                              	{{ promptsForm.emotions }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingFour">
+                      <h5 class="mb-0 font-weight-bold">
+                        <a class="btn btn-link toggle-questions collapsed" data-target="#learning">
+                          Learning and Conclusion
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="learning" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>Analyse alternate solutions and their consequences. Considering the factors, how will you act to similar situations in future? </label>
+                              <div class="form-label-group">
+                              	{{ promptsForm.solutions }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <label>What were the learnings from the experience? How has this experience changed your initial/previous beliefs and knowledge? How do you feel after reflecting on the situation?</label>
+                              <div class="form-label-group">
+                              	{{ promptsForm.learnings }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div><br>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-3">
+                      <input type="submit" class="btn btn-primary" value="Save">
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/tagsinput.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        if($('.experience_check:checked').val() == 1){
+            $('#id_experience').prop('required', true).closest('.form-row').show();
+            $('#id_experience_helpful').prop('required', true).closest('.form-row').show();
+          }else{
+            $('#id_experience').prop('required', false).closest('.form-row').hide();
+            $('#id_experience_helpful').prop('required', false).closest('.form-row').hide();
+          }
+
+        $('.toggle-questions').click(function(e){
+          e.stopPropagation();
+          var thisbtn = $(this);
+          var questionBoxId = thisbtn.data('target');
+
+          $(questionBoxId).slideToggle("slow");
+        });
+
+        $('.experience_check').click(function(e){
+          if($('.experience_check:checked').val() == 1){
+            $('#id_experience').prop('required', true).closest('.form-row').show();
+            $('#id_experience_helpful').prop('required', true).closest('.form-row').show();
+          }else{
+            $('#id_experience').prop('required', false).closest('.form-row').hide();
+            $('#id_experience_helpful').prop('required', false).closest('.form-row').hide();
+          }
+        });
+
+      });
+    </script>
+{% endblock %}
