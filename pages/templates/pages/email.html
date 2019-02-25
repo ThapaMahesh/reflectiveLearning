@@ -1,0 +1,85 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="card col-md-8 mx-auto mt-5">
+        <div class="card-header">Contact Form</div>
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              <p>{{ form.non_field_errors.as_text }}</p>
+          </div>
+          {% endif %}
+          <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label>Your Name</label>
+              <div class="form-label-group">
+                {{ form.name }}
+                <br/>
+                {% if form.name.errors %}
+                <p class="alert alert-danger">{{ form.name.errors.as_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Your Email</label>
+              <div class="form-label-group">
+                {{ form.email }}
+                <br/>
+                {% if form.email.errors %}
+                <p class="alert alert-danger">{{ form.email.errors.as_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <div class="form-label-group">
+                {{ form.subject }}
+                <br/>
+                {% if form.subject.errors %}
+                <p class="alert alert-danger">{{ form.subject.errors.as_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <div class="form-label-group">
+                {{ form.message }}
+                <br/>
+                {% if form.message.errors %}
+                <p class="alert alert-danger">{{ form.message.errors.as_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send Mail</button>
+            <!-- <a class="btn btn-primary btn-block" href="index.html">Login</a> -->
+          </form>
+        </div>
+      </div>
+</div>
+<br>
+<br>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        
+      });
+    </script>
+{% endblock %}

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin - Dashboard</title>
+    <title>Reflective Learning</title>
 
     <!-- Bootstrap core CSS-->
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
@@ -43,6 +43,11 @@
 
       <!-- Navbar -->
       <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
+        <li class="nav-item dropdown no-arrow mx-1">
+          <a class="nav-link dropdown-toggle" href="{% url 'email' %}" id="messagesDropdown" role="button">
+            <i class="fas fa-envelope fa-fw"></i> Contact Developer
+          </a>
+        </li>
         <li class="nav-item dropdown no-arrow">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-user-circle fa-fw"></i> {% if user.is_authenticated %}{{ user.first_name }}{% else %} Guest {% endif %}
@@ -90,7 +95,7 @@
         <footer class="sticky-footer">
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
-              <span>Copyright © Your Website 2018</span>
+              <span>Copyright © Mahesh</span>
             </div>
           </div>
         </footer>

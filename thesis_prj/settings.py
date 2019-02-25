@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '2!i1met*ekqa$81cm3!ar&(vl5kqpb)vyw=gtp8aa**z1ittim'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -72,6 +72,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'thesis_prj.wsgi.application'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+DEFAULT_FROM_EMAIL = 'testing@example.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'bdrmaheshthapa'
+EMAIL_HOST_PASSWORD = 'taekwondo01'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
 
 # Database
