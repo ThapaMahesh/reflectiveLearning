@@ -49,6 +49,9 @@ def postReflection(request, group_id):
             allText = ""
             for key, value in request.POST.items():
                 if key != 'has_experience' and key != 'csrfmiddlewaretoken' and key != 'current' and key != 'is_group' and key != 'title' and key != 'tags':
+                    if request.POST['has_experience'] == "0" and (key == 'experience' or key == 'experience_helpful'):
+                        # add nothing
+                        value = ''
                     allText = allText + ' ' + value
 
             if request.POST['has_experience'] == "1" and (request.POST['experience'] == "" or request.POST['experience_helpful'] == ""):
@@ -66,6 +69,11 @@ def postReflection(request, group_id):
             promptSave = promptsForm.save(commit=False)
             promptSave.updated_by = request.user
             promptSave.reflection = reflectionSave
+
+            if request.POST['has_experience'] == "0":
+                promptSave.experience = ""
+                promptSave.experience_helpful = ""
+
             promptSave.readability = json.dumps(textAnalysis['readability'])
             promptSave.wordFrequency = json.dumps(textAnalysis['wordFrequency'])
             promptSave.sentiment = textAnalysis['sentiment']['compound']
@@ -169,6 +177,9 @@ def editReflection(request, reflection_id, group_id):
             allText = ""
             for key, value in request.POST.items():
                 if key != 'has_experience' and key != 'csrfmiddlewaretoken' and key != 'current' and key != 'is_group' and key != 'title' and key != 'tags':
+                    if request.POST['has_experience'] == "0" and (key == 'experience' or key == 'experience_helpful'):
+                        # add nothing
+                        value = ''
                     allText = allText + ' ' + value
 
             if request.POST['has_experience'] == "1" and (request.POST['experience'] == "" or request.POST['experience_helpful'] == ""):
@@ -185,6 +196,11 @@ def editReflection(request, reflection_id, group_id):
             promptSave = promptsForm.save(commit=False)
             promptSave.updated_by = request.user
             promptSave.reflection = reflectionSave
+
+            if request.POST['has_experience'] == "0":
+                promptSave.experience = ""
+                promptSave.experience_helpful = ""
+
             promptSave.readability = json.dumps(textAnalysis['readability'])
             promptSave.wordFrequency = json.dumps(textAnalysis['wordFrequency'])
             promptSave.sentiment = textAnalysis['sentiment']['compound']
