@@ -36,7 +36,7 @@
 
     <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-      <a class="navbar-brand mr-1" href="index.html">RL</a>
+      <a class="navbar-brand mr-1" href="{% url 'home' %}">RL</a>
 
       <!-- Navbar Search -->
 
@@ -114,7 +114,8 @@
     <script src="{% static 'js/select2.min.js' %}"></script>
 
     <!-- Page level plugin JavaScript-->
-    <script src="{% static 'js/Chart.min.js' %}"></script>
+    <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/moment.js' %}"></script>
     <script src="{% static 'js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'js/dataTables.bootstrap4.js' %}"></script>
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>

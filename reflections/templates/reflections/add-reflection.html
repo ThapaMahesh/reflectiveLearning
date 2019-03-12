@@ -7,7 +7,9 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active">Add Reflection</li>
+  <li class="breadcrumb-item"><a href="{% url 'projects:view' group.project_id %}">Projects</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'projects:view-group' group.project_id group.id %}">Groups</a></li>
+  <li class="breadcrumb-item active">{{ type|title }} {{ reflection_type|title }} Reflection</li>
 {% endblock%}
 
 {% block content %}

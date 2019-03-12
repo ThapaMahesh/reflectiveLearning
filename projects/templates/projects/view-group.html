@@ -5,6 +5,11 @@
   
 {% endblock %}
 
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'projects:view' group.project_id %}">Projects</a></li>
+  <li class="breadcrumb-item active">Groups</li>
+{% endblock%}
+
 {% block content %}
 
           {% if messages %}
@@ -18,6 +23,18 @@
           {% endif %}
 
           <!-- DataTables Example -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card mb-3">
+                <div class="card-header">
+                  <i class="fas fa-chart-bar"></i>
+                  Group Sentiment</div>
+                <div class="card-body">
+                  <canvas id="sentiment-chart" width="100%" height="400"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-9">
               <div class="card mb-3">
@@ -47,6 +64,8 @@
                               <th>Name</th>
                               <th>Created By</th>
                               <th>Created Date</th>
+                              <th>Last Updated By</th>
+                              <th>Last Updated Date</th>
                               <th>Actions</th>
                             </tr>
                           </thead>
@@ -56,6 +75,8 @@
                               <td><a href="{% url 'reflections:view' eachReflection.id group.id %}">{{ eachReflection.title }}</a></td>
                               <td>{{ eachReflection.created_by.username }}</td>
                               <td>{{ eachReflection.created_at }}</td>
+                              <td>{{ eachReflection.updated_by.username }}</td>
+                              <td>{{ eachReflection.updated_at }}</td>
                               <td>
                                 <div class="action float-right">
                                     <a href="{% url 'reflections:edit' eachReflection.id group.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
@@ -192,6 +213,10 @@
 
 {% block js %}
 <script type="text/javascript">
+  var sentiment_data = {{ sentiment_data |safe }};
+  var date_list = {{ date_list|safe }};
+  console.log(sentiment_data);
+  console.log(date_list)
       $(document).ready(function(){
         $("#find_member").select2({
             width: '100%'
@@ -199,4 +224,5 @@
 
       });
     </script>
+<script type="text/javascript" src="{% static 'projects/js/group-sentiment.js' %}"></script>
 {% endblock %}

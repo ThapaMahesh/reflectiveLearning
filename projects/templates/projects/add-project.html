@@ -5,6 +5,10 @@
   
 {% endblock %}
 
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">{{ type|title }} Project</li>
+{% endblock%}
+
 {% block content %}
   
           {% if projectForm.errors %}

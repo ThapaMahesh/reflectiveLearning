@@ -12,8 +12,10 @@ EXP_CHOICES = (
 
 class Reflection(models.Model):
 	title = models.CharField(max_length=255, default="")
-	tags = models.CharField(max_length=255, default="")
+	# tags = models.CharField(max_length=255, default="")
 	created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_reflections")
+	updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL, related_name="user_reflections_updated")
+	updated_at = models.DateTimeField(default=datetime.now)
 	group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="group_reflections")
 	is_group = models.BooleanField()
 	created_at = models.DateTimeField(default=datetime.now)
@@ -46,6 +48,9 @@ class Prompts(models.Model):
 	readability = models.TextField()
 	wordFrequency = models.TextField(default='')
 	sentiment = models.FloatField(default=0.0)
-	updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_prompts")
 	created_at = models.DateTimeField(default=datetime.now)
-	updated_at = models.DateTimeField(default=datetime.now)
+
+
+class Tags(models.Model):
+	name = models.CharField(max_length=255, default='')
+	reflection = models.ManyToManyField(Reflection, related_name="reflection_tags")

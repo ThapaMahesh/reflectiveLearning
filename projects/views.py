@@ -1,5 +1,6 @@
+import json
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
 from datetime import date, datetime
@@ -7,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db.models import Subquery
+from django.utils import formats
 
 from .forms import ProjectForm
 
@@ -111,10 +113,7 @@ def addGroup(request, project_id):
 	if request.method == 'POST':
 		try:
 			allInputs = request.POST.copy()
-			print('here1')
 			group = Group.objects.filter(name=allInputs.get('name')).filter(project=project)
-			print('here2')
-			print(group)
 			if group:
 				messages.error(request, 'Group with same name already exists!')
 			else:
@@ -161,11 +160,26 @@ def viewGroup(request, project_id, group_id):
 		messages.error(request, 'Unauthorized Request')
 		return HttpResponseRedirect(reverse('dashboard'))
 
+	# find all sentiment for each member
+	sentiment_data = []
+	date_list = []
+	for i, member in enumerate(members):
+		reflections = member.user.user_reflections.filter(group_id=group.id)
+		sentiment_dict = {}
+		sentiment_dict['key'] = member.user.first_name
+		sentiment_dict['data'] = []
+		for reflection in reflections:
+			if not reflection.is_group:
+				sentiment_dict['data'].append([formats.date_format(reflection.created_at, 'DATE_FORMAT'), reflection.reflection_prompts.all()[0].sentiment])
+				date_list.append(formats.date_format(reflection.created_at, 'DATE_FORMAT'))
+		sentiment_data.append(sentiment_dict)
+	date_list = list(set(date_list))
+
 	group_reflections = Reflection.objects.filter(group=group).filter(is_group=True)
 	your_reflections = Reflection.objects.filter(group=group).filter(is_group=False).filter(created_by=request.user)
-	provide_feedback = Reflection.objects.filter(group=group).filter(~Q(created_by_id=request.user.id))
+	provide_feedback = Reflection.objects.filter(group=group).filter(~Q(created_by_id=request.user.id)).filter(is_group=False)
 
-	return render(request, 'projects/view-group.html', {'provide_feedback': provide_feedback, 'members': members, 'group': group, 'group_reflections': group_reflections, 'your_reflections': your_reflections})
+	return render(request, 'projects/view-group.html', {'date_list': json.dumps(date_list), 'sentiment_data': sentiment_data, 'provide_feedback': provide_feedback, 'members': members, 'group': group, 'group_reflections': group_reflections, 'your_reflections': your_reflections})
 
 @login_required
 def deleteGroup(request, project_id, group_id):

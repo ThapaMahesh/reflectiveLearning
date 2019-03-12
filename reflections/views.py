@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import PromptsForm, ReflectionForm, DiscussionForm, FeedbackForm
 from helpers.preprocess import PreProcess
 from django.conf import settings
-from reflections.models import Reflection, Discussion
+from datetime import datetime
+from reflections.models import Reflection, Discussion, Tags
 from projects.models import Group
 from django.template.defaulttags import register
 
@@ -60,11 +61,20 @@ def postReflection(request, group_id):
 
             textAnalysis = index(allText)
 
+
             reflectionSave = reflectionForm.save(commit=False)
-            reflectionSave.tags = ",".join(str(x) for x in allInputs.getlist('tags'))
+            # reflectionSave.tags = ",".join(str(x) for x in allInputs.getlist('tags'))
             reflectionSave.created_by = request.user
+            reflectionSave.updated_by = request.user
             reflectionSave.group = group
             reflectionSave.save()
+
+            for eachTag in allInputs.getlist('tags'):
+                tag_lower = eachTag.lower()
+                tag_exits = Tags.objects.filter(name=tag_lower).exists()
+                if tag_exits == False:
+                    new_tag = Tags.objects.create(name=tag_lower)
+                    new_tag.reflection.add(reflectionSave)
 
             promptSave = promptsForm.save(commit=False)
             promptSave.updated_by = request.user
@@ -90,13 +100,18 @@ def postReflection(request, group_id):
         reflectionForm.initial['is_group'] = 1 if request.GET.get('type') == "group" else 0
     return render(request, 'reflections/add-reflection.html', {'reflection_type': reflection_type, 'group': group, 'promptsForm': promptsForm, 'reflectionForm': reflectionForm, 'type': 'add'})
 
-
+@login_required
 def viewReflection(request, reflection_id, group_id):
     group = get_object_or_404(Group, id=group_id)
     reflection = get_object_or_404(Reflection, id=reflection_id)
 
     if reflection.group != group:
         messages.error(request, 'Invalid Request!')
+        return HttpResponseRedirect(reverse('dashboard'))
+
+    group_members = [eachMember.user_id for eachMember in group.members.all()]
+    if request.user.id not in group_members:
+        messages.error(request, 'User is not member of the requested group')
         return HttpResponseRedirect(reverse('dashboard'))
 
     REFLECTION_CHOICES = {'4': 'Demonstrates superior skills of critical thinking, understanding of the presented concepts. The reflection is insighful and thoroughly analysed with well supported viewpoints.',
@@ -124,7 +139,7 @@ def viewReflection(request, reflection_id, group_id):
 
     if request.method == "POST":
         allInputs = request.POST.copy()
-        discussionForm = FeedbackForm(allInputs)
+        discussionForm = FeedbackForm(allInputs) if not reflection.is_group else DiscussionForm(allInputs)
         if discussionForm.is_valid():
             discussionSave = discussionForm.save(commit=False)
             discussionSave.created_by = request.user
@@ -134,11 +149,11 @@ def viewReflection(request, reflection_id, group_id):
             messages.success(request, 'Your data was saved successfully!')
             return HttpResponseRedirect(reverse('reflections:view', args=[reflection.id, group_id]))
     else:
-        discussionForm = FeedbackForm()
+        discussionForm = FeedbackForm() if not reflection.is_group else DiscussionForm()
 
     return render(request, 'reflections/view-reflection.html', {'LEARNING_CHOICES': LEARNING_CHOICES, 'EXPERIENCE_CHOICES': EXPERIENCE_CHOICES, 'REFLECTION_CHOICES': REFLECTION_CHOICES, 'group': group, 'reflection': reflection, 'details': details, 'discussionForm': discussionForm})
 
-
+@login_required
 def deleteReflection(request, reflection_id, group_id):
     group = get_object_or_404(Group, id=group_id)
     reflection = get_object_or_404(Reflection, id=reflection_id)
@@ -147,12 +162,16 @@ def deleteReflection(request, reflection_id, group_id):
         messages.error(request, 'Invalid Request!')
         return HttpResponseRedirect(reverse('dashboard'))
 
+    if reflection.created_by != request.user:
+        messages.error(request, 'Unauthorized request!')
+        return HttpResponseRedirect(reverse('dashboard'))        
+
     # reflection.reflection.delete()
     reflection.delete()
     messages.success(request, 'Your data was removed successfully!')
     return HttpResponseRedirect(reverse('projects:view-group', args=[group.project_id, group_id]))
 
-
+@login_required
 def editReflection(request, reflection_id, group_id):
     group = get_object_or_404(Group, id=group_id)
     reflection = get_object_or_404(Reflection, id=reflection_id)
@@ -165,6 +184,10 @@ def editReflection(request, reflection_id, group_id):
 
     if request.user.id not in group_members:
         messages.error(request, 'User is not member of the requested group')
+        return HttpResponseRedirect(reverse('dashboard'))
+
+    if reflection.created_by != request.user or not reflection.is_group:
+        messages.error(request, 'Unauthorized request')
         return HttpResponseRedirect(reverse('dashboard'))
 
     prompt = reflection.reflection_prompts.all()[0]
@@ -189,9 +212,26 @@ def editReflection(request, reflection_id, group_id):
             textAnalysis = index(allText)
 
             reflectionSave = reflectionForm.save(commit=False)
-            reflectionSave.tags = ",".join(str(x) for x in allInputs.getlist('tags'))
-            reflectionSave.created_by = request.user
+            # reflectionSave.tags = ",".join(str(x) for x in allInputs.getlist('tags'))
+            # reflectionSave.created_by = request.user
+            reflectionSave.updated_by = request.user
+            reflectionSave.updated_at = datetime.now()
             reflectionSave.save()
+
+            tag_list = allInputs.getlist('tags')[0].split(',')
+
+            reflectionSave.reflection_tags.clear()
+
+            for eachTag in tag_list:
+                tag_lower = eachTag.lower()
+                tag_exits = Tags.objects.filter(name=tag_lower).exists()
+                if tag_exits:
+                    continue
+                new_tag = Tags()
+                new_tag.name=tag_lower
+                new_tag.save()
+
+                new_tag.reflection.add(reflectionSave)
 
             promptSave = promptsForm.save(commit=False)
             promptSave.updated_by = request.user
@@ -209,9 +249,11 @@ def editReflection(request, reflection_id, group_id):
             messages.success(request, 'Your data was updated successfully!')
             return HttpResponseRedirect(reverse('reflections:view', args=[reflectionSave.id, group_id]))
     else:
+        tags = ",".join([x.name for x in reflection.reflection_tags.all()])
         promptsForm = PromptsForm(instance=prompt)
         reflectionForm = ReflectionForm(instance=reflection)
         promptsForm.initial['has_experience'] = int(prompt.has_experience)
+        reflectionForm.initial['tags'] = tags
     return render(request, 'reflections/add-reflection.html', {'group': group, 'promptsForm': promptsForm, 'reflectionForm': reflectionForm, 'type': 'edit'})
 
 
