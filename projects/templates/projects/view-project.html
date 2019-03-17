@@ -173,7 +173,7 @@
                   <div class="form-label-group">
                     <select class="form-control" name="members[]" id="add-members" multiple="multiple">
                         {% for eachMember in members %}
-                        <option value="{{ eachMember.user.id }}">{{ eachMember.user.first_name }} {{ eachMember.user.last_name }}</option>
+                        <option value="{{ eachMember.user.id }}">{{ eachMember.user.first_name }} {{ eachMember.user.last_name }} ({{ eachMember.user.username }})</option>
                         {% endfor %}
                       </select>
                   </div>

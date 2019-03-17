@@ -44,7 +44,7 @@ def findUsers(request):
 	# return JsonResponse(serializers.serialize('json', users), safe=False)
 	data = []
 	for eachUser in users:
-		data.append({'id': eachUser.id, 'text': eachUser.first_name + ' (' + eachUser.username + ')'})
+		data.append({'id': eachUser.id, 'text': eachUser.first_name + ' ' + eachUser.last_name + ' (' + eachUser.username + ')'})
 
 	json_data = {"results": data, "pagination": {"more": False}}
 	return JsonResponse(json_data, safe=False)
