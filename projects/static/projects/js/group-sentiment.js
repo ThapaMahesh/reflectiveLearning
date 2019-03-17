@@ -7,6 +7,13 @@
         return color;
     }
 
+const SMILEY = {
+	'happy': happy,
+	'sad': sad,
+	'neutral': neutral
+}
+console.log(sentiment_data);
+
 all_data = []
 for (var i = 0; i < sentiment_data.length; i++) {
 	var color = getRandomColor()
@@ -16,13 +23,23 @@ for (var i = 0; i < sentiment_data.length; i++) {
 		backgroundColor: color,
 		showLine: true,
 		fill: false,
-		data: []
+		data: [],
+		pointStyle: []
 	});
+
 	for (var j = 0; j < sentiment_data[i].data.length; j++) {
 		all_data[i].data.push({x: sentiment_data[i].data[j][0], y: sentiment_data[i].data[j][1]});
+		
+		emotion = sentiment_data[i].data[j][1] > 0.2 ? 'happy' : (sentiment_data[i].data[j][1] < -0.2 ? 'sad' : 'neutral');
+
+		var img = new Image()
+		img.src = SMILEY[emotion];
+		img.height = 20;
+		img.width = 20;
+		
+		all_data[i].pointStyle.push(img);
 	}
 }
-console.log(all_data)
 var color = Chart.helpers.color;
 		var scatterChartData = {
 			datasets: all_data
@@ -56,7 +73,19 @@ var color = Chart.helpers.color;
 					          stepSize: 0.2,
 					        }
 					      }]
-			        }
+			        },
+			        tooltips: {
+				      callbacks: {
+				      	title: function(tooltipItems, data) {
+				          return '';
+				        },
+				        label: function(tooltipItem, data) {
+				          var datasetLabel = '';
+				          var label = data.labels[tooltipItem.index];
+				          return parseFloat(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y).toFixed(2);
+				        }
+				      }
+				    }
 				}
 			});
 		};

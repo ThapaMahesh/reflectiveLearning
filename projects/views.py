@@ -45,7 +45,7 @@ def addProject(request):
             member.save()
 
             messages.success(request, 'Your data was saved successfully!')
-            return HttpResponseRedirect(reverse('dashboard'))
+            return HttpResponseRedirect(reverse('pages:dashboard'))
     else:
         projectForm = ProjectForm()
     return render(request, 'projects/add-project.html', {'type': 'add', 'projectForm': projectForm})
@@ -60,7 +60,7 @@ def viewProject(request, project_id):
     # not member of the project or didn't create the project
     if project.created_by_id != request.user.id and request.user.id not in [member.user_id for member in members]:
     	messages.error(request, 'Unauthorized Request')
-    	return HttpResponseRedirect(reverse('dashboard'))
+    	return HttpResponseRedirect(reverse('pages:dashboard'))
 
     return render(request, 'projects/view-project.html', {'project': project, 'groups': groups, 'members': members})
 
@@ -71,11 +71,11 @@ def deleteProject(request, project_id):
 	# if didn't create the project
 	if project.created_by_id != request.user.id:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	project.delete()
 	messages.success(request, 'Your data was removed successfully!')
-	return HttpResponseRedirect(reverse('dashboard'))
+	return HttpResponseRedirect(reverse('pages:dashboard'))
 
 @login_required
 def editProject(request, project_id):
@@ -84,7 +84,7 @@ def editProject(request, project_id):
 	# if didn't create the project
 	if project.created_by_id != request.user.id:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	if request.method == 'POST':
 		allInputs = request.POST.copy()
@@ -95,7 +95,7 @@ def editProject(request, project_id):
 		    projectSave.save()
 
 		messages.success(request, 'Your data was saved successfully!')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 	else:
 		projectForm = ProjectForm(instance=project)
 	return render(request, 'projects/add-project.html', {'type': 'edit', 'projectForm': projectForm})
@@ -108,7 +108,7 @@ def addGroup(request, project_id):
 	# if didn't create the project
 	if project.created_by_id != request.user.id:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
     	
 	if request.method == 'POST':
 		try:
@@ -143,7 +143,7 @@ def addGroup(request, project_id):
 			return HttpResponseRedirect(reverse('projects:view', args=[project.id]))
 	else:
 		messages.error(request, 'Invalid request!')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 
 @login_required
@@ -158,7 +158,7 @@ def viewGroup(request, project_id, group_id):
 	# not member of the group or didn't create the group(project)
 	if project.created_by_id != request.user.id and request.user.id not in [member.user_id for member in members]:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	# find all sentiment for each member
 	sentiment_data = []
@@ -188,7 +188,7 @@ def deleteGroup(request, project_id, group_id):
 
 	if project.created_by_id != request.user.id:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	if project != group.project:
 		messages.error(request, 'Invalid group request!')
@@ -206,7 +206,7 @@ def addMember(request, project_id):
 
 			if project.created_by_id != request.user.id:
 				messages.error(request, 'Unauthorized Request')
-				return HttpResponseRedirect(reverse('dashboard'))
+				return HttpResponseRedirect(reverse('pages:dashboard'))
 
 			allInputs = request.POST.copy()
 			users = CustomUser.objects.filter(id__in=allInputs.getlist('members[]'))
@@ -230,7 +230,7 @@ def addMember(request, project_id):
 			return HttpResponseRedirect(reverse('projects:view', args=[project.id]))
 	else:
 		messages.error(request, 'Invalid request!')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 
 @login_required
@@ -240,11 +240,11 @@ def removeProjectMember(request, project_id, member_id):
 
 	if project.created_by_id != request.user.id:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	if member.project != project:
 		messages.error(request, 'Invalid Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	member.delete()
 	messages.success(request, 'Member removed successfully!')
@@ -259,11 +259,11 @@ def addGroupMember(request, project_id, group_id):
 
 			if group.project_id != project.id:
 				messages.error(request, 'Invalid Request')
-				return HttpResponseRedirect(reverse('dashboard'))
+				return HttpResponseRedirect(reverse('pages:dashboard'))
 
 			if group.project.created_by != request.user:
 				messages.error(request, 'Unauthorized Request')
-				return HttpResponseRedirect(reverse('dashboard'))
+				return HttpResponseRedirect(reverse('pages:dashboard'))
 
 			allInputs = request.POST.copy()
 			member_exists = Member.objects.filter(user_id__in=allInputs.getlist('members[]')).filter(project=group.project)
@@ -284,7 +284,7 @@ def addGroupMember(request, project_id, group_id):
 			return HttpResponseRedirect(reverse('projects:view-group', args=[group.project_id, group.id]))
 	else:
 		messages.error(request, 'Invalid request!')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 
 @login_required
@@ -295,15 +295,15 @@ def removeGroupMember(request, project_id, group_id, member_id):
 
 	if project.created_by_id != request.user.id:
 		messages.error(request, 'Unauthorized Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	if group.project != project:
 		messages.error(request, 'Invalid Request')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	if member not in group.members.all():
 		messages.error(request, 'User is not member of the requested group')
-		return HttpResponseRedirect(reverse('dashboard'))
+		return HttpResponseRedirect(reverse('pages:dashboard'))
 
 	group.members.remove(member)
 

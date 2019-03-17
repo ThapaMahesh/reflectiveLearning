@@ -32,6 +32,7 @@ class PromptsForm(ModelForm):
     has_experience = forms.ChoiceField(widget=forms.RadioSelect(attrs={'class':'form-check-input experience_check'}), choices=CHOICES)
     experience = forms.CharField(widget=forms.Textarea(attrs={'width':"100%", 'class':'form-control' }), required=False)
     experience_helpful = forms.CharField(widget=forms.Textarea(attrs={'width':"100%", 'class':'form-control' }), required=False)
+    actions = forms.CharField(widget=forms.Textarea(attrs={'width':"100%", 'class':'form-control' }), error_messages={'required': 'Actions in Reasoning section is Required'})
     factors = forms.CharField(widget=forms.Textarea(attrs={'width':"100%", 'class':'form-control' }), error_messages={'required': 'Factors in Reasoning section is Required'})
     emotions = forms.CharField(widget=forms.Textarea(attrs={'width':"100%", 'class':'form-control' }), error_messages={'required': 'Emotions in Reasoning section is Required'})
     solutions = forms.CharField(widget=forms.Textarea(attrs={'width':"100%", 'class':'form-control' }), error_messages={'required': 'Solutions in Conclusion section is Required'})
@@ -40,7 +41,7 @@ class PromptsForm(ModelForm):
 
     class Meta:
         model = Prompts
-        fields = ['situation', 'has_experience', 'experience', 'experience_helpful', 'factors', 'emotions', 'solutions', 'learnings', 'current']
+        fields = ['situation', 'has_experience', 'experience', 'experience_helpful', 'actions', 'factors', 'emotions', 'solutions', 'learnings', 'current']
         exclude = ['updated_by_id', 'reflection_id']
 
 

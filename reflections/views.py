@@ -1,4 +1,5 @@
 import json
+from googletrans import Translator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
@@ -19,8 +20,8 @@ from django.template.defaulttags import register
 def get_item(dictionary, key):
     return dictionary.get(key)
 
-def index(reflectionText):
-    processData = PreProcess(reflectionText)
+def index(reflectionText, norsk):
+    processData = PreProcess(reflectionText, norsk)
     readability = processData.complexity()
     sentiment = processData.sentiment()
     wordFrequency = processData.wordFrequency()
@@ -40,7 +41,7 @@ def postReflection(request, group_id):
 
     if request.user.id not in group_members:
         messages.error(request, 'User is not member of the requested group')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
     if request.method == 'POST':
         allInputs = request.POST.copy()
@@ -59,7 +60,12 @@ def postReflection(request, group_id):
                 messages.error(request, 'Experience data is missing.')
                 return render(request, 'reflections/home.html', {'promptsForm': promptsForm, 'reflectionForm': reflectionForm, 'type': 'add'})
 
-            textAnalysis = index(allText)
+            textAnalysis = index(allText, request.user.norsk)
+            if request.user.norsk:
+                translator = Translator()
+                translation_text = translator.translate(allText)
+                new_textAnalysis = index(translation_text.text, request.user.norsk)
+                textAnalysis['sentiment'] = new_textAnalysis['sentiment']
 
 
             reflectionSave = reflectionForm.save(commit=False)
@@ -69,12 +75,16 @@ def postReflection(request, group_id):
             reflectionSave.group = group
             reflectionSave.save()
 
-            for eachTag in allInputs.getlist('tags'):
+            tag_list = allInputs.getlist('tags')[0].split(',')
+
+            for eachTag in tag_list:
                 tag_lower = eachTag.lower()
                 tag_exits = Tags.objects.filter(name=tag_lower).exists()
                 if tag_exits == False:
                     new_tag = Tags.objects.create(name=tag_lower)
-                    new_tag.reflection.add(reflectionSave)
+                else:
+                    new_tag = Tags.objects.filter(name=tag_lower).first()
+                new_tag.reflection.add(reflectionSave)
 
             promptSave = promptsForm.save(commit=False)
             promptSave.updated_by = request.user
@@ -86,6 +96,7 @@ def postReflection(request, group_id):
 
             promptSave.readability = json.dumps(textAnalysis['readability'])
             promptSave.wordFrequency = json.dumps(textAnalysis['wordFrequency'])
+
             promptSave.sentiment = textAnalysis['sentiment']['compound']
             promptSave.save()
 
@@ -107,12 +118,12 @@ def viewReflection(request, reflection_id, group_id):
 
     if reflection.group != group:
         messages.error(request, 'Invalid Request!')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
     group_members = [eachMember.user_id for eachMember in group.members.all()]
     if request.user.id not in group_members:
         messages.error(request, 'User is not member of the requested group')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
     REFLECTION_CHOICES = {'4': 'Demonstrates superior skills of critical thinking, understanding of the presented concepts. The reflection is insighful and thoroughly analysed with well supported viewpoints.',
                 '3': 'Demonstrates skills of thoughtful understanding of the concept with general supportive viewpoints.',
@@ -160,11 +171,11 @@ def deleteReflection(request, reflection_id, group_id):
 
     if reflection.group != group:
         messages.error(request, 'Invalid Request!')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
     if reflection.created_by != request.user:
         messages.error(request, 'Unauthorized request!')
-        return HttpResponseRedirect(reverse('dashboard'))        
+        return HttpResponseRedirect(reverse('pages:dashboard'))        
 
     # reflection.reflection.delete()
     reflection.delete()
@@ -178,17 +189,17 @@ def editReflection(request, reflection_id, group_id):
 
     if reflection.group != group:
         messages.error(request, 'Invalid Request!')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
     group_members = [eachMember.user_id for eachMember in group.members.all()]
 
     if request.user.id not in group_members:
         messages.error(request, 'User is not member of the requested group')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
-    if reflection.created_by != request.user or not reflection.is_group:
+    if reflection.created_by != request.user and not reflection.is_group:
         messages.error(request, 'Unauthorized request')
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse('pages:dashboard'))
 
     prompt = reflection.reflection_prompts.all()[0]
 
@@ -209,7 +220,14 @@ def editReflection(request, reflection_id, group_id):
                 messages.error(request, 'Experience data is missing.')
                 return render(request, 'reflections/home.html', {'promptsForm': promptsForm, 'reflectionForm': reflectionForm, 'type': 'edit'})
 
-            textAnalysis = index(allText)
+            textAnalysis = index(allText, request.user.norsk)
+            print(textAnalysis)
+            if request.user.norsk:
+                translator = Translator()
+                translation_text = translator.translate(allText)
+                new_textAnalysis = index(translation_text.text, request.user.norsk)
+                textAnalysis['sentiment'] = new_textAnalysis['sentiment']
+                print(new_textAnalysis)
 
             reflectionSave = reflectionForm.save(commit=False)
             # reflectionSave.tags = ",".join(str(x) for x in allInputs.getlist('tags'))
@@ -226,6 +244,8 @@ def editReflection(request, reflection_id, group_id):
                 tag_lower = eachTag.lower()
                 tag_exits = Tags.objects.filter(name=tag_lower).exists()
                 if tag_exits:
+                    new_tag = Tags.objects.filter(name=tag_lower).first()
+                    new_tag.reflection.add(reflectionSave)
                     continue
                 new_tag = Tags()
                 new_tag.name=tag_lower
@@ -281,7 +301,7 @@ def downloadReflection(request, reflection_id):
     prompt = reflection.reflection_prompts.all()[0]
 
 
-    content = ['\nSituation:\n'+prompt.situation, '\nExperience:\n'+prompt.experience if prompt.has_experience else '', '\nReflection and Analysis:\n', prompt.experience_helpful if prompt.has_experience else '', prompt.factors, prompt.emotions, '\nLearnings and Conclusion:\n'+prompt.solutions, prompt.learnings]
+    content = ['\nSituation:\n'+prompt.situation, '\nExperience:\n'+prompt.experience if prompt.has_experience else '', '\nReflection and Analysis:\n', prompt.experience_helpful if prompt.has_experience else '', prompt.actions, prompt.factors, prompt.emotions, '\nLearnings and Conclusion:\n'+prompt.solutions, prompt.learnings]
 
     response_content = "\n".join(content)
 

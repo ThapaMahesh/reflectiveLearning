@@ -72,36 +72,43 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'thesis_prj.wsgi.application'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+DEFAULT_FROM_EMAIL = 'testing@example.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'bdrmaheshthapa'
+EMAIL_HOST_PASSWORD = 'taekwondo01'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'heroku_f082f0375aeb2a1',
-#         'USER': 'bdb54bb66ec419',
-#         'PASSWORD': 'f059c197',
-#         'HOST': 'eu-cdbr-west-02.cleardb.net',
-#         'OPTIONS': {
-#             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
-#         }
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'reflection_test',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'heroku_f082f0375aeb2a1',
+        'USER': 'bdb54bb66ec419',
+        'PASSWORD': 'f059c197',
+        'HOST': 'eu-cdbr-west-02.cleardb.net',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
         }
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'reflection_test',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
+#         }
+#     }
+# }
 
 
 # Password validation
@@ -149,7 +156,7 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'pages:dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
 django_heroku.settings(locals())

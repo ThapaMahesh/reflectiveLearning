@@ -31,6 +31,7 @@
                   Group Sentiment</div>
                 <div class="card-body">
                   <canvas id="sentiment-chart" width="100%" height="400"></canvas>
+                  <div id="chartjs-tooltip3"></div>
                 </div>
               </div>
             </div>
@@ -56,7 +57,7 @@
                   <br/>
                   <div class="tab-content">
                     <div class="tab-pane fade show active" id="group" role="tabpanel" aria-labelledby="group-tab">
-                      <a href="{% url 'reflections:create' group.id %}?type=group">Add Group Reflection</a>
+                      <a class="btn btn-primary" href="{% url 'reflections:create' group.id %}?type=group">Add Group Reflection</a><br><br>
                       <div class="table-responsive">
                         <table class="table table-bordered dataTable" width="100%" cellspacing="0">
                           <thead>
@@ -93,7 +94,7 @@
                       </div>
                     </div>
                     <div class="tab-pane" id="individual" role="tabpanel" aria-labelledby="individual-tab">
-                      <a href="{% url 'reflections:create' group.id %}?type=individual">Add Your Reflection</a>
+                      <a class="btn btn-primary" href="{% url 'reflections:create' group.id %}?type=individual">Add Your Reflection</a><br><br>
                       <div class="table-responsive">
                         <table class="table table-bordered dataTable" width="100%" cellspacing="0">
                           <thead>
@@ -215,13 +216,14 @@
 <script type="text/javascript">
   var sentiment_data = {{ sentiment_data |safe }};
   var date_list = {{ date_list|safe }};
-  console.log(sentiment_data);
-  console.log(date_list)
+  var happy = "{% static 'img/happy.png' %}";
+  var sad = "{% static 'img/sad.png' %}";
+  var neutral = "{% static 'img/neutral.png' %}";
       $(document).ready(function(){
         $("#find_member").select2({
             width: '100%'
           });
-
+        $('.dataTable').DataTable();
       });
     </script>
 <script type="text/javascript" src="{% static 'projects/js/group-sentiment.js' %}"></script>

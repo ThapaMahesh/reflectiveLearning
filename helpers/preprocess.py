@@ -7,10 +7,12 @@ import re
 
 class PreProcess:
     text = ""
+    norks = False
     allWordList = []
     stopWordList = []
-    def __init__(self, text):
+    def __init__(self, text, norsk):
         self.text = text
+        self.norsk = norsk
 
     def getWordList(self, text, stop, splitHyphen=False):
         wordList = self.text.split()
@@ -38,7 +40,10 @@ class PreProcess:
         wordTag = nltk.pos_tag(newList)
         self.allWordList = newList
 
-        usefulWords = [word for word in newList if word.lower() not in stopwords.words("english")]
+        if self.norsk:
+            usefulWords = [word for word in newList if word.lower() not in stopwords.words("norwegian")]
+        else:
+            usefulWords = [word for word in newList if word.lower() not in stopwords.words("english")]
         self.stopWordList = usefulWords
         if stop:
             return usefulWords

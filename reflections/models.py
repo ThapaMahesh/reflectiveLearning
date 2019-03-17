@@ -40,6 +40,7 @@ class Prompts(models.Model):
 	has_experience = models.BooleanField(choices=EXP_CHOICES)
 	experience = models.TextField(blank=True)
 	experience_helpful = models.TextField(blank=True)
+	actions = models.TextField(default='')
 	factors = models.TextField()
 	emotions = models.TextField()
 	solutions = models.TextField()
@@ -54,3 +55,6 @@ class Prompts(models.Model):
 class Tags(models.Model):
 	name = models.CharField(max_length=255, default='')
 	reflection = models.ManyToManyField(Reflection, related_name="reflection_tags")
+
+	def __str__(self):
+		return self.name

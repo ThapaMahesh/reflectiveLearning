@@ -24,12 +24,24 @@
               <i class="fas fa-table"></i>
               Projects</div>
             <div class="card-body">
+              <ul class="nav nav-tabs projectTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="active_prj-tab" data-toggle="tab" href="#active_prj" role="tab" aria-controls="active_prj" aria-selected="true">Active</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="archive_prj-tab" data-toggle="tab" href="#archive_prj" role="tab" aria-controls="archive_prj" aria-selected="false">Archive</a>
+                </li>
+              </ul>
+              <br/>
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="active_prj" role="tabpanel" aria-labelledby="group-tab">
                   <div class="table-responsive">
                     <table class="table table-bordered dataTable" width="100%" cellspacing="0">
                       <thead>
                         <tr>
                           <th>Name</th>
                           <th>Created By</th>
+                          <th>No. of Groups</th>
                           <th>No. of Members</th>
                           <th>Start Date</th>
                           <th>End date</th>
@@ -37,10 +49,17 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for eachProject in projects %}
+                        {% for eachProject in active_projects %}
                         <tr>
                           <td><a href="{% url 'projects:view' eachProject.id %}">{{ eachProject.name }}</a></td>
-                          <td>{{ eachProject.created_by.first_name }}</td>
+                          <td>
+                            {% if eachProject.created_by_id == user.id %}
+                            Self
+                            {% else %}
+                            {{ eachProject.created_by.first_name }}
+                            {% endif %}
+                          </td>
+                          <td>{{ eachProject.project_groups.count }}</td>
                           <td>{{ eachProject.project_members.count }}</td>
                           <td>{{ eachProject.start_date }}</td>
                           <td>{{ eachProject.end_date }}</td>
@@ -58,6 +77,54 @@
                       </tbody>
                     </table>
                   </div>
+                </div>
+
+
+                <div class="tab-pane fade show" id="archive_prj" role="tabpanel" aria-labelledby="group-tab">
+                  <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Created By</th>
+                          <th>No. of Groups</th>
+                          <th>No. of Members</th>
+                          <th>Start Date</th>
+                          <th>End date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for eachProject in archive_projects %}
+                        <tr>
+                          <td><a href="{% url 'projects:view' eachProject.id %}">{{ eachProject.name }}</a></td>
+                          <td>
+                            {% if eachProject.created_by_id == user.id %}
+                            Self
+                            {% else %}
+                            {{ eachProject.created_by.first_name }}
+                            {% endif %}
+                          </td>
+                          <td>{{ eachProject.project_groups.count }}</td>
+                          <td>{{ eachProject.project_members.count }}</td>
+                          <td>{{ eachProject.start_date }}</td>
+                          <td>{{ eachProject.end_date }}</td>
+                          <td>
+                            {% if eachProject.created_by_id == user.id %}
+                            <div class="action float-right">
+                                <a href="{% url 'projects:edit' eachProject.id %}" class="text-success" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a>
+
+                                <a href="{% url 'projects:delete' eachProject.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
 
               
             </div>
@@ -68,7 +135,7 @@
 {% block js %}
 <script type="text/javascript">
       $(document).ready(function(){
-        
+        $('.dataTable').DataTable();
       });
     </script>
 {% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'default.html' %}
+
+{% load static %}
+{% block css %}
+  
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Search Reflections</li>
+{% endblock%}
+
+{% block content %}
+
+          {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == "success" %}
+              <p class="alert alert-success">{{ message }}</p>
+              {% else %}
+              <p class="alert alert-danger">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              Search</div>
+            <div class="card-body">
+              <form action="{% url 'pages:search' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <label>Title</label>
+                      <div class="form-label-group">
+                        {{ searchForm.title }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Tags</label>
+                      <div class="form-label-group">
+                        {{ searchForm.tags }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <label>From Date</label>
+                      <div class="form-label-group">
+                        {{ searchForm.start_date }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label>To Date</label>
+                      <div class="form-label-group">
+                        {{ searchForm.end_date }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-sm-6">
+                      {{ searchForm.include_group }}
+                      <label class="form-check-label" for="id_include_group">
+                        Include Group Reflections
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <input type="submit" class="btn btn-primary" value="Search">
+                  </div>
+                </div>
+              </form>
+              <hr>
+              <div class="table-responsive">
+                <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Project</th>
+                      <th>Group</th>
+                      <th>Type</th>
+                      <th>Tags</th>
+                      <th>Created Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for eachReflection in search_reflections %}
+                    <tr>
+                      <td><a href="{% url 'reflections:view' eachReflection.id eachReflection.group_id %}">{{ eachReflection.title }}</a></td>
+                      <td><a href="{% url 'projects:view' eachReflection.group.project_id %}">{{ eachReflection.group.project.name }}</a></td>
+                      <td><a href="{% url 'projects:view-group' eachReflection.group.project_id eachReflection.group_id %}">{{ eachReflection.group.name }}</a></td>
+                      <td>
+                        {% if eachReflection.is_group %}
+                        Group Reflection
+                        {% else %}
+                        Self Reflection
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% for eachTag in eachReflection.reflection_tags.all %}
+                          <span class="badge badge-primary">{{ eachTag.name }}</span> 
+                        {% endfor %}
+                      </td>
+                      <td>{{ eachReflection.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+      $(document).ready(function(){
+        $('.dataTable').DataTable();
+
+         $("#id_tags").select2({
+            width: '100%'
+          });
+
+         $('#id_tags').val({{ selected_tags|safe }}).trigger('change');
+      });
+    </script>
+{% endblock %}

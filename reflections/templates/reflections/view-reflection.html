@@ -45,7 +45,7 @@
                     <div class="card mb-3">
                       <div class="card-header">
                         <i class="fas fa-chart-bar"></i>
-                        Word Frequency</div>
+                        Word Frequency <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="You can analyse if you have used some words more than required."></i></div>
                       <div class="card-body">
                         <canvas id="myBarChart" width="100%" height="50"></canvas>
                       </div>
@@ -109,7 +109,7 @@
                           <div class="form-group">
                             <div class="form-row">
                               <div class="col-md-12">
-                                <p class="text-content">{% if details.has_experience %}{{ details.experience_helpful }}{% endif %}<br>{{ details.factors }}<br>{{ details.emotions }}</p>
+                                <p class="text-content">{% if details.has_experience %}{{ details.experience_helpful }}{% endif %}<br>{{ details.actions }}<br>{{ details.factors }}<br>{{ details.emotions }}</p>
                               </div>
                             </div>
                           </div>
@@ -192,6 +192,14 @@
                                       <tr>
                                         <td>Lexical Diversity</td>
                                         <td>{{ details.readability.stats.lexicalDiversity | floatformat:2 }}% (unique words)</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Tags</td>
+                                        <td>
+                                          {% for eachTag in reflection.reflection_tags.all %}
+                                          <span class="badge badge-primary">{{ eachTag.name }}</span>
+                                          {% endfor %}
+                                        </td>
                                       </tr>
                                     </tbody>
                                   </table>
