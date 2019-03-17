@@ -87,9 +87,9 @@ EMAIL_PORT = 587
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_f082f0375aeb2a1',
-        'USER': 'bdb54bb66ec419',
-        'PASSWORD': 'f059c197',
+        'NAME': 'heroku_9dfe6309aefe216',
+        'USER': 'ba97ea1ceed89a',
+        'PASSWORD': 'f5eae084',
         'HOST': 'eu-cdbr-west-02.cleardb.net',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
