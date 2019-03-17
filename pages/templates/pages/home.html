@@ -15,6 +15,8 @@
         <a href="{% url 'pages:dashboard' %}">Go to dashboard</a>
         {% else %}
         <a href="{% url 'login' %}">Login</a>
+        <br><br>
+        Are you new to the application? Create account <a href="{% url 'users:signup' %}">here</a>.
         {% endif %}
       </div>
     </div>
