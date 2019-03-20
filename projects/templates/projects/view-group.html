@@ -202,7 +202,7 @@
                           <a href="{% url 'projects:delete-group-member' group.project_id group.id eachMember.id %}" class="remove text-danger" data-toggle="tooltip" title="Delete"><i class="far fa-times-circle"></i></a>
                       </div>
                       {% endif %}
-                      {{ eachMember.user.first_name }}
+                      {{ eachMember.user.first_name }} {{ eachMember.user.last_name }}
                     </li>
                     {% endfor %}
                   </ul>
