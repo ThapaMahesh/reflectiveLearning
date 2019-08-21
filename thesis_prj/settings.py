@@ -75,9 +75,9 @@ WSGI_APPLICATION = 'thesis_prj.wsgi.application'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'testing@example.com'
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'bdrmaheshthapa'
-EMAIL_HOST_PASSWORD = 'taekwondo01'
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
@@ -87,10 +87,10 @@ EMAIL_PORT = 587
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_9dfe6309aefe216',
-        'USER': 'ba97ea1ceed89a',
-        'PASSWORD': 'f5eae084',
-        'HOST': 'eu-cdbr-west-02.cleardb.net',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
         'OPTIONS': {
             'init_command': "SET sql_mode = 'STRICT_ALL_TABLES';",
         }
