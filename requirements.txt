@@ -7,7 +7,7 @@ django-heroku==0.3.1
 googletrans==2.4.0
 idna==2.8
 mysqlclient==1.4.1
-nltk==3.4
+nltk==3.4.5
 numpy==1.16.1
 psycopg2==2.7.7
 pytz==2018.9
